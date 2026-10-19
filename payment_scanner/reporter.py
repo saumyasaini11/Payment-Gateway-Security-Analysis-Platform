@@ -32,7 +32,10 @@ def format_json_report(result: ScanResult) -> str:
 
     for susp in result.suspicious:
         # Use description or a combination of description and details
-        report_dict["suspicious"].append(f"{susp.description} ({susp.details})")
+        finding = susp.description
+        if susp.details:
+            finding += f" ({susp.details})"
+        report_dict["suspicious"].append(finding)
 
     if result.trust_assessment:
         report_dict["trust_assessment"] = {

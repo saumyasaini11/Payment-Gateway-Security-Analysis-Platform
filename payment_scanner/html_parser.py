@@ -3,6 +3,7 @@
 import logging
 import re
 from typing import List
+from urllib.parse import urljoin, urlsplit
 from bs4 import BeautifulSoup, Comment
 from payment_scanner.utils import ParsedPage, ParsedForm
 
@@ -42,7 +43,7 @@ def parse_html(html_content: bytes, url: str) -> ParsedPage:
     all_forms = soup.find_all("form")
     for form in all_forms:
         action = form.get("action", "")
-        method = form.get("method", "get").lower()
+        method = (form.get("method") or "").strip().lower() or "get"
         input_names: List[str] = []
         input_ids: List[str] = []
         input_types: List[str] = []
@@ -54,7 +55,7 @@ def parse_html(html_content: bytes, url: str) -> ParsedPage:
             inp_id = inp.get("id")
             if inp_id:
                 input_ids.append(inp_id)
-            inp_type = inp.get("type", "text").lower()
+            inp_type = (inp.get("type") or "").strip().lower() or "text"
             input_types.append(inp_type)
 
         forms.append(
@@ -108,23 +109,27 @@ def parse_html(html_content: bytes, url: str) -> ParsedPage:
     # Extract & detect hidden iframes
     hidden_iframes: List[str] = []
     for tag in soup.find_all("iframe"):
-        style = tag.get("style", "").lower()
+        style = re.sub(r"\s+", "", tag.get("style", "").lower())
         is_hidden = (
             tag.has_attr("hidden")
-            or "display:none" in style.replace(" ", "")
-            or "visibility:hidden" in style.replace(" ", "")
+            or "display:none" in style
+            or "visibility:hidden" in style
         )
         if is_hidden:
             iframe_src = tag.get("src", "")
             # Skip known-safe analytics/tag manager iframes
             if iframe_src:
-                from urllib.parse import urlparse as _urlparse
-                iframe_host = _urlparse(iframe_src).netloc.lower().lstrip("www.")
-                if any(
-                    iframe_src.lower().startswith(f"https://{safe}") or
-                    iframe_src.lower().startswith(f"http://{safe}")
-                    for safe in SAFE_IFRAME_HOSTS
-                ) or iframe_host in SAFE_IFRAME_HOSTS:
+                try:
+                    iframe_url = urlsplit(urljoin(url, iframe_src.strip()))
+                    iframe_host = iframe_url.hostname
+                except ValueError:
+                    iframe_url = None
+                    iframe_host = None
+                if (
+                    iframe_url is not None
+                    and iframe_url.scheme in {"http", "https"}
+                    and iframe_host in SAFE_IFRAME_HOSTS
+                ):
                     logger.debug("Skipping known-safe analytics iframe: %s", iframe_src)
                     continue
             iframe_id = tag.get("id", "")
@@ -135,9 +140,8 @@ def parse_html(html_content: bytes, url: str) -> ParsedPage:
     # Detect JavaScript rewriting form action
     js_rewrite_patterns: List[str] = []
     rewrite_regexes = [
-        re.compile(r"\.action\s*="),
-        re.compile(r"setAttribute\(\s*['\"]action['\"]\s*,"),
-        re.compile(r"document\.forms\[.*\]\.action"),
+        re.compile(r"\.action\s*=(?!=|>)"),
+        re.compile(r"setAttribute\s*\(\s*['\"]action['\"]\s*,"),
     ]
 
     for script_content in inline_scripts:

@@ -1,6 +1,6 @@
 # Payment Gateway Security Analysis Platform
 
-A tool to scan webpages and detect payment gateway integrations along with suspicious security patterns — available as both a CLI tool and a web app.
+A tool to scan webpages and detect payment gateway integrations along with suspicious security patterns — available as both a CLI tool and a web app. It analyzes downloaded HTML and inline scripts; it does not execute JavaScript or inspect checkout flows loaded after page rendering. Risk scores describe heuristic findings and do not guarantee that a site is safe.
 
 ---
 
@@ -35,8 +35,14 @@ cd Payment-Gateway-Security-Analysis-Platform
 
 ### 2. Install backend dependencies
 
+Use Python 3.10+ and Node.js 22.12+ (for the Vite frontend). Create and activate a virtual environment before installing dependencies:
+
 ```bash
-pip install -r requirements.txt
+python -m venv .venv
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+# macOS / Linux: source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
 ### 3. Start the API server
@@ -57,6 +63,8 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
+The frontend calls `http://localhost:8000` by default. To use another API address, create `frontend/.env.local` with `VITE_API_URL=https://your-api.example` and restart the frontend dev server. Keep the API server running in a separate terminal.
+
 ---
 
 ## CLI Usage
@@ -73,6 +81,8 @@ python scanner.py --file test_page.html
 # Output as JSON
 python scanner.py https://example.com --json
 ```
+
+CLI exit codes: `0` means the scan completed without suspicious findings, `2` means the scan completed with suspicious findings, and `1` means scanning failed. The bundled `test_page.html` deliberately contains suspicious patterns and returns `2`. JSON reports are written to stdout; diagnostic logs go to stderr.
 
 ---
 
@@ -109,6 +119,14 @@ No Python changes needed — just add an entry to `signatures.json`:
 
 ```bash
 python -m pytest tests/ -v
+```
+
+Check the frontend from its own directory:
+
+```bash
+cd frontend
+npm run build
+npm run lint
 ```
 
 ---

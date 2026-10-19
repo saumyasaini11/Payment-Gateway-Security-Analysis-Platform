@@ -7,6 +7,7 @@ interface RiskGaugeProps {
 }
 
 export const RiskGauge: React.FC<RiskGaugeProps> = ({ score, level }) => {
+  const boundedScore = Number.isFinite(score) ? Math.min(100, Math.max(0, score)) : 0;
   const getSeverityStyle = () => {
     switch (level) {
       case 'HIGH':
@@ -38,7 +39,7 @@ export const RiskGauge: React.FC<RiskGaugeProps> = ({ score, level }) => {
   const strokeWidth = 8;
   const normalizedRadius = radius - strokeWidth * 2;
   const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
+  const strokeDashoffset = circumference - (boundedScore / 100) * circumference;
 
   return (
     <div className="bg-white rounded-xl border border-navy-100 p-6 shadow-md h-full flex flex-col items-center justify-between">
@@ -53,9 +54,17 @@ export const RiskGauge: React.FC<RiskGaugeProps> = ({ score, level }) => {
         )}
       </div>
 
-      <div className="relative flex items-center justify-center mt-2">
+      <div
+        className="relative flex items-center justify-center mt-2"
+        role="meter"
+        aria-label="Risk score"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={boundedScore}
+        aria-valuetext={`${boundedScore} out of 100, ${level} risk`}
+      >
         {/* SVG Circle Gauge */}
-        <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+        <svg aria-hidden="true" className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
           {/* Background circle */}
           <circle
             className="text-navy-50"
@@ -82,7 +91,7 @@ export const RiskGauge: React.FC<RiskGaugeProps> = ({ score, level }) => {
 
         {/* Center Score Text */}
         <div className="absolute flex flex-col items-center text-center">
-          <span className="text-3xl font-extrabold text-navy-950 leading-none">{score}</span>
+          <span className="text-3xl font-extrabold text-navy-950 leading-none">{boundedScore}</span>
           <span className="text-[10px] uppercase font-bold text-navy-300 mt-1">OF 100</span>
         </div>
       </div>

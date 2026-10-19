@@ -22,9 +22,10 @@ export const Dashboard: React.FC = () => {
             </p>
           </div>
 
-          {!isScanning ? (
+          <div hidden={isScanning}>
             <HeroScanInput />
-          ) : (
+          </div>
+          {isScanning && (
             <ScanProgressTimeline />
           )}
         </div>
